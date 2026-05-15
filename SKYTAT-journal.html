@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Электронный Дневник SKYTAT</title>
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background-color: white;
+      color: black;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://cdn.pixabay.com/photo/2019/02/20/06/37/ornament-3971128_960_720.jpg');
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    .header{
+      background: linear-gradient(to right, #28a745, #007BFF);
+      padding: 20px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn { 0%{opacity:0;} 100%{opacity:1;} }
+
+    h1{ color:white; font-size: 3rem; margin:0; }
+    .container{ text-align:center; margin-top:40px; padding: 0 12px; }
+
+    .panel{
+      margin: 16px auto;
+      max-width: 920px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid rgba(0,123,255,0.30);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+
+    .row{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    button{
+      background-color:#4CAF50;
+      color:white;
+      border:none;
+      padding:12px 22px;
+      text-align:center;
+      font-size:15px;
+      margin:4px 2px;
+      cursor:pointer;
+      transition: background-color .3s;
+      border-radius:8px;
+    }
+    button:hover{ background-color:#45a049; }
+    button.secondary{ background:#007BFF; }
+    button.secondary:hover{ background:#0a6bce; }
+    button.danger{ background:#dc3545; }
+    button.danger:hover{ background:#c82333; }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="time"],
+    select{
+      padding:10px;
+      margin:8px 0;
+      width:85%;
+      max-width:340px;
+      border:1px solid #007BFF;
+      border-radius:8px;
+      font-size:15px;
+      background: rgba(255,255,255,0.95);
+      outline:none;
+    }
+
+    .inline-title{
+      display:flex;
+      align-items:baseline;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .muted{ font-size: 12px; color:#555; }
+
+    /* Группы */
+    .group-item{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      padding:10px 12px;
+      border:1px solid rgba(0,123,255,0.22);
+      border-radius:12px;
+      margin:8px auto;
+      max-width: 820px;
+      background: rgba(255,255,255,0.90);
+    }
+    .group-left{ display:flex; flex-direction:column; gap:2px; text-align:left; }
+    .group-title{ font-weight: 800; }
+    .group-sub{ font-size: 12px; color:#444; }
+
+    /* Карточки занятий */
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap:12px;
+      margin-top:10px;
+      padding:0 6px;
+    }
+    .card{
+      text-align:left;
+      background: rgba(255,255,255,0.96);
+      border:1px solid rgba(0,123,255,0.22);
+      border-radius:14px;
+      padding:12px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+    }
+    .card h4{ margin:0 0 8px 0; font-size:16px; }
+    .meta{ font-size:13px; color:#333; line-height: 1.35; }
+    .meta b{ color:#111; }
+    .zoom a{ word-break: break-all; }
+
+    /* Чат */
+    .chat-wrap{
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .chat-box{
+      border:1px solid #007BFF;
+      height:220px;
+      overflow-y:auto;
+      margin:10px auto;
+      padding:10px;
+      background-color: rgba(255,255,255,0.95);
+      border-radius:12px;
+      text-align:left;
+    }
+    .chat-msg{
+      padding:8px 10px;
+      border-radius:10px;
+      margin:6px 0;
+      background: rgba(0,123,255,0.07);
+      border: 1px solid rgba(0,123,255,0.12);
+      font-size:14px;
+    }
+    .chat-msg .who{ font-weight:800; }
+
+    /* ===== MODAL (управление учениками) ===== */
+    #students-modal-overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 9999;
+    }
+    #students-modal{
+      width: 100%;
+      max-width: 860px;
+      background: rgba(255,255,255,0.97);
+      border-radius: 16px;
+      border: 1px solid rgba(0,123,255,0.28);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.25);
+      overflow: hidden;
+    }
+    .modal-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding: 14px 16px;
+      background: linear-gradient(to right, rgba(40,167,69,0.12), rgba(0,123,255,0.12));
+      border-bottom: 1px solid rgba(0,123,255,0.18);
+    }
+    .modal-title{ font-size:18px; font-weight:900; text-align:left; }
+    .modal-subtitle{ font-size:13px; color:#333; text-align:left; margin-top:2px; }
+    .modal-body{ padding: 14px 16px 16px; }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>SKYTAT</h1>
+  </div>
+
+  <div class="container">
+
+    <!-- Выбор роли -->
+    <div id="login-selection" class="panel">
+      <h2>Выберите роль</h2>
+      <div class="row">
+        <button onclick="showLoginForm('admin')">Вход для администратора</button>
+        <button onclick="showLoginForm('teacher')">Вход для учителей</button>
+        <button onclick="showLoginForm('student')">Вход для учеников/родителей</button>
+      </div>
+    </div>
+
+    <!-- Логин -->
+    <div id="login-form" class="panel" style="display:none;">
+      <h3 id="form-title"></h3>
+      <input type="text" id="username" placeholder="Логин">
+      <input type="password" id="password" placeholder="Пароль">
+      <div class="row">
+        <button onclick="login()">Войти</button>
+        <button class="secondary" onclick="goBack()">Назад</button>
+      </div>
+    
+    </div>
+
+    <!-- Admin -->
+    <div id="admin-dashboard" class="panel" style="display:none;">
+      <h2>Панель администратора</h2>
+      <h3>Создание учителя</h3>
+      <input type="text" id="teacher-name" placeholder="Имя Учителя">
+      <input type="text" id="teacher-username" placeholder="Логин Учителя">
+      <input type="password" id="teacher-password" placeholder="Пароль Учителя">
+      <div class="row">
+        <button onclick="createTeacher()">Создать учителя</button>
+        <button class="danger" onclick="logout()">Выйти</button>
+      </div>
+    </div>
+
+    <!-- Teacher -->
+    <div id="teacher-dashboard" class="panel" style="display:none;">
+      <div class="inline-title">
+        <h2>Панель учителя:</h2>
+        <h2><span id="current-teacher"></span></h2>
+      </div>
+
+      <h3>Создание группы + данные занятия</h3>
+      <input type="text" id="group-name" placeholder="Название группы">
+
+      <select id="class-day">
+        <option value="">День недели</option>
+        <option>Понедельник</option>
+        <option>Вторник</option>
+        <option>Среда</option>
+        <option>Четверг</option>
+        <option>Пятница</option>
+        <option>Суббота</option>
+        <option>Воскресенье</option>
+      </select>
+
+      <input type="time" id="class-time" placeholder="Время">
+      <input type="text" id="zoom-link" placeholder="Ссылка на Zoom">
+      <input type="text" id="lesson-id" placeholder="ID конференции">
+      <input type="text" id="lesson-password" placeholder="Код/пароль входа">
+
+      <div class="row">
+        <button onclick="createGroupWithClass()">Создать группу</button>
+        <button class="danger" onclick="logout()">Выйти из аккаунта</button>
+      </div>
+
+      <h3>Мои группы</h3>
+      <div id="group-list-teacher"></div>
+
+      <h3>Занятие выбранной группы</h3>
+      <div class="muted">!! Указано московское время !!</div>
+      <div id="upcoming-classes-teacher" class="cards"></div>
+
+      <h3>Чат группы</h3>
+      <select id="group-select" onchange="updateChatAndTeacherCards()"></select>
+
+      <div class="chat-wrap">
+        <div id="teacher-group-chat" class="chat-box"></div>
+        <input type="text" id="chat-message" placeholder="Ваше сообщение">
+        <div class="row">
+          <button onclick="sendChatMessage()">Отправить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student / Parent -->
+    <div id="student-parent-dashboard" class="panel" style="display:none;">
+      <div class="inline-title">
+        <h2>Профиль:</h2>
+        <h2><span id="current-student"></span></h2>
+      </div>
+
+      <div class="row">
+        <button class="danger" onclick="logout()">Выйти</button>
+      </div>
+
+      <h3>Мои занятия <span class="muted">(!!! Московское время)</span></h3>
+      <div id="upcoming-classes" class="cards"></div>
+
+      <h3>Чат группы</h3>
+      <div class="chat-wrap">
+        <div id="student-group-chat" class="chat-box"></div>
+      </div>
+      <div class="muted">Чат только для чтения (Сообщения пишет учитель).</div>
+    </div>
+
+  </div>
+
+
+  <div id="students-modal-overlay">
+    <div id="students-modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Управление учениками</div>
+          <div class="modal-subtitle">Группа: <b><span id="current-group"></span></b></div>
+        </div>
+        <button class="danger" onclick="closeGroupStudents()">Закрыть</button>
+      </div>
+
+      <div class="modal-body">
+        <input type="text" id="student-name" placeholder="Имя Ученика">
+        <input type="text" id="student-username" placeholder="Логин Ученика">
+        <input type="password" id="student-password" placeholder="Пароль Ученика">
+        <div class="row">
+          <button onclick="createStudent()">Создать Ученика</button>
+        </div>
+
+        <h4 style="text-align:left; max-width:820px; margin:12px auto 6px;">Список учеников</h4>
+        <div id="student-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== DATA ======
+    let teachers = [];
+    let students = {}; // { [groupName]: [{name,username,password,group}] }
+
+    // groups: [{ name, day, time, zoomLink, lessonId, lessonPassword, teacherName }]
+    let groups = [];
+
+    // chatMessages: { [groupName]: [{ who, text, ts }] }
+    let chatMessages = {};
+
+    let currentRole = '';
+    let currentTeacherName = '';
+    let currentGroupName = '';
+    let currentStudent = null;
+
+    // ====== HELPERS ======
+    function esc(str) {
+      return String(str ?? '').replace(/[&<>"']/g, m => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[m]));
+    }
+
+    function show(id, yes) {
+      document.getElementById(id).style.display = yes ? 'block' : 'none';
+    }
+
+    function getGroupByName(name) {
+      return groups.find(g => g.name === name);
+    }
+
+    function nowStamp() {
+      return new Date().toLocaleString('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit',
+        day: '2-digit',
+        month: '2-digit'
+      });
+    }
+
+    // ====== AUTH UI ======
+    function showLoginForm(role) {
+      show('login-selection', false);
+      show('login-form', true);
+
+      // Для student показываем правильный заголовок
+      const titleRole = role === 'student' ? 'Учителей/Родителей' : (role.charAt(0).toUpperCase() + role.slice(1));
+      document.getElementById('form-title').innerText = `Вход для ${titleRole}`;
+
+      currentRole = role;
+    }
+
+    function goBack() {
+      show('login-form', false);
+      show('login-selection', true);
+      currentRole = '';
+    }
+
+    function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (currentRole === 'admin') {
+        if (username === 'admin' && password === 'admin123') {
+          show('login-form', false);
+          show('admin-dashboard', true);
+        } else {
+          alert('Неверный логин или пароль!');
+        }
+        return;
+      }
+
+      if (currentRole === 'teacher') {
+        const teacher = teachers.find(t => t.username === username && t.password === password);
+        if (!teacher) return alert('Неверный логин или пароль!');
+
+        currentTeacherName = teacher.name;
+        document.getElementById('current-teacher').innerText = currentTeacherName;
+
+        show('login-form', false);
+        show('teacher-dashboard', true);
+
+        renderTeacherUI();
+        return;
+      }
+
+      if (currentRole === 'student') {
+        const allStudents = Object.values(students).flat();
+        const student = allStudents.find(s => s.username === username && s.password === password);
+        if (!student) return alert('Неверный логин или пароль!');
+
+        currentStudent = student;
+        document.getElementById('current-student').innerText = student.name;
+
+        show('login-form', false);
+        show('student-parent-dashboard', true);
+
+        displayStudentClasses(student.group);
+        renderStudentChat(student.group);
+        return;
+      }
+    }
+
+    function logout() {
+      show('admin-dashboard', false);
+      show('teacher-dashboard', false);
+      show('student-parent-dashboard', false);
+
+      // закрываем модалку
+      closeGroupStudents();
+
+      show('login-selection', true);
+
+      currentRole = '';
+      currentTeacherName = '';
+      currentGroupName = '';
+      currentStudent = null;
+
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+    }
+
+    // ====== ADMIN ======
+    function createTeacher() {
+      const name = document.getElementById('teacher-name').value.trim();
+      const username = document.getElementById('teacher-username').value.trim();
+      const password = document.getElementById('teacher-password').value;
+
+      if (!name || !username || !password) return alert('Заполните имя/логин/пароль учителя.');
+      if (teachers.some(t => t.username === username)) return alert('Такой логин учителя уже существует.');
+
+      teachers.push({ name, username, password });
+      alert(`Учитель создан: ${name}`);
+
+      document.getElementById('teacher-name').value = '';
+      document.getElementById('teacher-username').value = '';
+      document.getElementById('teacher-password').value = '';
+    }
+
+    // ====== TEACHER: GROUP + CLASS ======
+    function createGroupWithClass() {
+      const groupName = document.getElementById('group-name').value.trim();
+      const day = document.getElementById('class-day').value;
+      const time = document.getElementById('class-time').value;
+      const zoomLink = document.getElementById('zoom-link').value.trim();
+      const lessonId = document.getElementById('lesson-id').value.trim();
+      const lessonPassword = document.getElementById('lesson-password').value.trim();
+
+      if (!groupName) return alert('Введите название группы!');
+      if (groups.some(g => g.name === groupName)) return alert('Группа с таким названием уже существует!');
+      if (!day || !time) return alert('Укажите день недели и время.');
+      if (!zoomLink) return alert('Укажите ссылку на Zoom.');
+      if (!lessonId || !lessonPassword) return alert('Укажите ID и код/пароль.');
+
+      groups.push({
+        name: groupName,
+        day, time, zoomLink, lessonId, lessonPassword,
+        teacherName: currentTeacherName
+      });
+
+      if (!chatMessages[groupName]) chatMessages[groupName] = [];
+
+      alert(`Группа создана: ${groupName} (${day}, ${time}, мск)`);
+
+      document.getElementById('group-name').value = '';
+      document.getElementById('class-day').value = '';
+      document.getElementById('class-time').value = '';
+      document.getElementById('zoom-link').value = '';
+      document.getElementById('lesson-id').value = '';
+      document.getElementById('lesson-password').value = '';
+
+      renderTeacherUI();
+    }
+
+    function renderTeacherUI() {
+      renderGroupListForTeacher();
+      renderGroupSelect();
+      updateChatAndTeacherCards();
+    }
+
+    function renderGroupListForTeacher() {
+      const wrap = document.getElementById('group-list-teacher');
+      wrap.innerHTML = '';
+
+      const myGroups = groups.filter(g => g.teacherName === currentTeacherName);
+
+      if (myGroups.length === 0) {
+        wrap.innerHTML = `<div class="muted">Пока нет групп. Создайте первую выше.</div>`;
+        return;
+      }
+
+      myGroups.forEach(g => {
+        const item = document.createElement('div');
+        item.className = 'group-item';
+        item.innerHTML = `
+          <div class="group-left">
+            <div class="group-title">${esc(g.name)}</div>
+            <div class="group-sub">${esc(g.day)}, ${esc(g.time)} (мск)</div>
+          </div>
+          <div>
+            <button class="secondary" onclick="openGroupStudents('${esc(g.name)}')">Управление</button>
+          </div>
+        `;
+        wrap.appendChild(item);
+      });
+    }
+
+    function renderGroupSelect() {
+      const sel = document.getElementById('group-select');
+      sel.innerHTML = '';
+
+      const myGroups = groups.filter(g => g.teacherName === currentTeacherName);
+
+      myGroups.forEach(g => {
+        const option = document.createElement('option');
+        option.value = g.name;
+        option.innerText = g.name;
+        sel.appendChild(option);
+      });
+
+      if (myGroups.length === 0) {
+        document.getElementById('teacher-group-chat').innerHTML = `<div class="muted">Нет групп для чата.</div>`;
+        document.getElementById('upcoming-classes-teacher').innerHTML = '';
+      }
+    }
+
+    function updateChatAndTeacherCards() {
+      const sel = document.getElementById('group-select');
+      const groupName = sel.value;
+      renderTeacherChat(groupName);
+      renderTeacherClasses(groupName);
+    }
+
+    function renderTeacherClasses(groupName) {
+      const wrap = document.getElementById('upcoming-classes-teacher');
+      wrap.innerHTML = '';
+
+      if (!groupName) return;
+
+      const g = getGroupByName(groupName);
+      if (!g) return;
+
+      wrap.innerHTML = `
+        <div class="card">
+          <h4>${esc(g.name)}</h4>
+          <div class="meta"><b>День:</b> ${esc(g.day)}</div>
+          <div class="meta"><b>Время:</b> ${esc(g.time)} (мск)</div>
+          <div class="meta zoom"><b>Zoom:</b> <a href="${esc(g.zoomLink)}" target="_blank">${esc(g.zoomLink)}</a></div>
+          <div class="meta"><b>ID:</b> ${esc(g.lessonId)}</div>
+          <div class="meta"><b>Код:</b> ${esc(g.lessonPassword)}</div>
+        </div>
+      `;
+    }
+
+    // ====== MODAL: STUDENTS (закрытие только по кнопке) ======
+    function openGroupStudents(groupName) {
+      currentGroupName = groupName;
+      document.getElementById('current-group').innerText = groupName;
+
+      const overlay = document.getElementById('students-modal-overlay');
+      overlay.style.display = 'flex';
+
+      displayStudentList();
+    }
+
+    function closeGroupStudents() {
+      const overlay = document.getElementById('students-modal-overlay');
+      overlay.style.display = 'none';
+      currentGroupName = '';
+    }
+
+    function createStudent() {
+      const name = document.getElementById('student-name').value.trim();
+      const username = document.getElementById('student-username').value.trim();
+      const password = document.getElementById('student-password').value;
+
+      if (!currentGroupName) return alert('Сначала нажмите "Управление" у нужной группы.');
+      if (!name || !username || !password) return alert('Заполните имя/логин/пароль.');
+
+      const allStudents = Object.values(students).flat();
+      if (allStudents.some(s => s.username === username)) return alert('Такой логин уже существует.');
+
+      const student = { name, username, password, group: currentGroupName };
+      if (!students[currentGroupName]) students[currentGroupName] = [];
+      students[currentGroupName].push(student);
+
+      alert(`Пользователь создан: ${name} (группа: ${currentGroupName})`);
+
+      document.getElementById('student-name').value = '';
+      document.getElementById('student-username').value = '';
+      document.getElementById('student-password').value = '';
+
+      displayStudentList();
+    }
+
+    function displayStudentList() {
+      const list = document.getElementById('student-list');
+      list.innerHTML = '';
+
+      const arr = students[currentGroupName] || [];
+      if (arr.length === 0) {
+        list.innerHTML = `<div class="muted">В этой группе пока нет учеников.</div>`;
+        return;
+      }
+
+      arr.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'group-item';
+        div.innerHTML = `
+          <div class="group-left">
+            <div class="group-title">${esc(s.name)}</div>
+            <div class="group-sub">Логин: ${esc(s.username)}</div>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    // ====== CHAT (teacher writes) ======
+    function renderTeacherChat(groupName) {
+      const chat = document.getElementById('teacher-group-chat');
+      chat.innerHTML = '';
+
+      if (!groupName) {
+        chat.innerHTML = `<div class="muted">Выберите группу.</div>`;
+        return;
+      }
+      if (!chatMessages[groupName]) chatMessages[groupName] = [];
+
+      const msgs = chatMessages[groupName];
+      if (msgs.length === 0) {
+        chat.innerHTML = `<div class="muted">Сообщений пока нет.</div>`;
+        return;
+      }
+
+      msgs.forEach(m => {
+        const d = document.createElement('div');
+        d.className = 'chat-msg';
+        d.innerHTML = `<span class="who">${esc(m.who)}:</span> ${esc(m.text)} <div class="muted">${esc(m.ts)}</div>`;
+        chat.appendChild(d);
+      });
+
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendChatMessage() {
+      const groupName = document.getElementById('group-select').value;
+      const input = document.getElementById('chat-message');
+      const message = input.value.trim();
+
+      if (!groupName) return alert('Выберите группу.');
+      if (!message) return;
+
+      if (!chatMessages[groupName]) chatMessages[groupName] = [];
+      chatMessages[groupName].push({ who: currentTeacherName, text: message, ts: nowStamp() });
+
+      input.value = '';
+
+      // обновляем чат учителя
+      renderTeacherChat(groupName);
+
+      // если в этот момент кто-то "ученик" открыт и его группа совпадает — обновим и его чат тоже
+      if (currentStudent && currentStudent.group === groupName) {
+        renderStudentChat(groupName);
+      }
+    }
+
+    function renderStudentChat(groupName) {
+      const chat = document.getElementById('student-group-chat');
+      chat.innerHTML = '';
+
+      if (!groupName) {
+        chat.innerHTML = `<div class="muted">Группа не определена.</div>`;
+        return;
+      }
+      if (!chatMessages[groupName]) chatMessages[groupName] = [];
+
+      const msgs = chatMessages[groupName];
+      if (msgs.length === 0) {
+        chat.innerHTML = `<div class="muted">Сообщений пока нет.</div>`;
+        return;
+      }
+
+      msgs.forEach(m => {
+        const d = document.createElement('div');
+        d.className = 'chat-msg';
+        d.innerHTML = `<span class="who">${esc(m.who)}:</span> ${esc(m.text)} <div class="muted">${esc(m.ts)}</div>`;
+        chat.appendChild(d);
+      });
+
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    // ====== STUDENT: CLASSES ======
+    function displayStudentClasses(groupName) {
+      const wrap = document.getElementById('upcoming-classes');
+      wrap.innerHTML = '';
+
+      const g = getGroupByName(groupName);
+      if (!g) {
+        wrap.innerHTML = `<div class="muted">Для вашей группы пока нет расписания.</div>`;
+        return;
+      }
+
+      wrap.innerHTML = `
+        <div class="card">
+          <h4>${esc(g.name)}</h4>
+          <div class="meta"><b>День:</b> ${esc(g.day)}</div>
+          <div class="meta"><b>Время:</b> ${esc(g.time)} (мск)</div>
+          <div class="meta zoom"><b>Zoom:</b> <a href="${esc(g.zoomLink)}" target="_blank">${esc(g.zoomLink)}</a></div>
+          <div class="meta"><b>ID:</b> ${esc(g.lessonId)}</div>
+          <div class="meta"><b>Код:</b> ${esc(g.lessonPassword)}</div>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
