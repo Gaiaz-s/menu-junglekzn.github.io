@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Меню ресторана</title>
+<title>Меню THE JUNGLE</title>
 <style>
   body {
     margin: 0;
@@ -89,8 +89,9 @@
     cursor: pointer;
     transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
   }
-  /* выделение блюда — всегда золотое (по умолчанию) */
-  .dish-card {
+  /* выделение блюда */
+  .dish-card.active,
+  .dish-card.selected {
     border-color: var(--gold);
     box-shadow: 0 0 15px var(--gold);
     background-color: #222;
@@ -137,59 +138,127 @@
 <!-- Меню -->
 <div class="menu" id="menu"></div>
 <script>
-  const categoriesNames = ['Закуски'];
+  const categoriesNames = [
+    'СТАРТЕРЫ',
+    'ПОКЕ',
+    'САЛАТЫ',
+    'ТАРТАРЫ',
+    'ГОРЯЧИЕ И ХОЛОДНЫЕ ЗАКУСКИ',
+    'УСТРИЧНЫЙ БАР',
+    'БЛЮДА НА КОМПАНИЮ',
+    'БРУСКЕТТЫ',
+    'БУРГЕРЫ',
+    'РОЛЛЫ',
+    'СУПЫ',
+    'ПАСТА',
+    'ГАРНИРЫ',
+    'ГОРЯЧИЕ БЛЮДА',
+    'БЛЮДА НА ОГНЕ',
+    'ДЕСЕРТЫ',
+    'ХЛЕБ',
+    'СОУСЫ'
+  ];
 
   const categoryData = {
-    'Закуски': [
+    'СТАРТЕРЫ': [
       {
-        name: 'Покé с лососем и авокадо',
+        name: 'Оливки начиненные с сыром Фета',
+        english: 'Olives stuffed with Feta cheese',
+        weightPrice: '160 гр | 730р.',
+        img: 'https://images.unsplash.com/photo-1604085207858-11b76e8bc8c7'
+      },
+      {
+        name: 'Фирменный ростбиф под соусом вителло тоннато',
+        english: 'Signature roast beef with vitello tonnato sauce',
+        weightPrice: '185 гр | 1090р.',
+        img: 'https://images.unsplash.com/photo-1590080875599-4a29b2a55d8d'
+      },
+      {
+        name: 'Экзотические фрукты',
+        english: 'Exotic fruits',
+        weightPrice: '1500 гр | 2900р.',
+        img: 'https://images.unsplash.com/photo-1574226516831-e1dff420e37e'
+      },
+      {
+        name: 'Сырное ассорти (Горгондзола, Камамбер, Маасдам, Пармезан, Виноград, Мед)',
+        english: 'Cheese platter (Gorgonzola, Camembert, Maasdam, Parmesan, grapes, honey)',
+        weightPrice: '270 гр | 1490р.',
+        img: 'https://images.unsplash.com/photo-1603280716474-80d7f0a1b8b7'
+      }
+    ],
+    'ПОКЕ': [
+      {
+        name: 'Поке с лососем и авокадо',
         english: 'Salmon and avocado poke',
         weightPrice: '360 гр | 1090р.',
-        img: 'https://images.unsplash.com/photo-1603006366543-3b8d7ed4b0d8'
-      },
+        img: 'https://images.unsplash.com/photo-1609417290692-2d4f7a5f8a7b'
+      }
+    ],
+    'САЛАТЫ': [
       {
         name: 'Салат с баклажанами в соусе свит-чили',
         english: 'Eggplant salad with sweet chili sauce',
         weightPrice: '200 гр | 690р.',
-        img: 'https://images.unsplash.com/photo-1574226516831-e1dff420e37e'
-      },
+        img: 'https://images.unsplash.com/photo-1571616174633-3933ef9d559e'
+      }
+    ],
+    'ТАРТАРЫ': [
       {
         name: 'Тар-тар из говядины',
         english: 'Beef tartare',
         weightPrice: '150 гр | 890р.',
-        img: 'https://images.unsplash.com/photo-1606945290626-8b3c8a9f5b4e'
-      },
+        img: 'https://images.unsplash.com/photo-1614438423770-7f1aeb4854b0'
+      }
+    ],
+    'ГОРЯЧИЕ И ХОЛОДНЫЕ ЗАКУСКИ': [
       {
         name: 'Креветки в кляре с соусом васаби',
         english: 'Battered shrimp with wasabi sauce',
         weightPrice: '180 гр | 990р.',
-        img: 'https://images.unsplash.com/photo-1586480363394-5a60aefb8d58'
-      },
+        img: 'https://images.unsplash.com/photo-1601077331614-7b3a7514e2b8'
+      }
+    ],
+    'УСТРИЧНЫЙ БАР': [
       {
         name: 'Устрица Императорская',
         english: 'Oyster Imperial',
         weightPrice: '1 шт | 580р.',
-        img: 'https://images.unsplash.com/photo-1603280716474-80d7f0a1b8b7'
-      },
+        img: 'https://images.unsplash.com/photo-1609761420272-9d7c9e16f5a4'
+      }
+    ],
+    'БЛЮДА НА КОМПАНИЮ': [
       {
         name: 'Дегустационный сет под пенное',
         english: 'Tasting set to pair with beer',
         weightPrice: '520 гр / 90 гр | 3980р.',
-        img: 'https://images.unsplash.com/photo-1603280716474-80d7f0a1b8b7'
-      },
+        img: 'https://images.unsplash.com/photo-1613173387022-04b18150a3f8'
+      }
+    ],
+    'БРУСКЕТТЫ': [
       {
         name: 'Брускетта с лососем и вялеными томатами',
         english: 'Bruschetta with salmon and sun-dried tomatoes',
         weightPrice: '120 гр | 690р.',
-        img: 'https://images.unsplash.com/photo-1609639172774-708e7a7a4b41'
+        img: 'https://images.unsplash.com/photo-1606804453198-2c4bc0f0a0e8'
       }
-    ]
+    ],
+    // Остальные категории — пустые
+    'БУРГЕРЫ': [],
+    'РОЛЛЫ': [],
+    'СУПЫ': [],
+    'ПАСТА': [],
+    'ГАРНИРЫ': [],
+    'ГОРЯЧИЕ БЛЮДА': [],
+    'БЛЮДА НА ОГНЕ': [],
+    'ДЕСЕРТЫ': [],
+    'ХЛЕБ': [],
+    'СОУСЫ': []
   };
 
   const categoriesDiv = document.getElementById('categories');
   const menuDiv = document.getElementById('menu');
 
-  // Создаем кнопку категории
+  // Создаем кнопки категорий
   categoriesNames.forEach(name => {
     const btn = document.createElement('button');
     btn.className = 'category-btn';
@@ -210,7 +279,7 @@
   });
 
   function showCategory(name) {
-    // Очищаем меню
+    // Очистка меню
     menuDiv.innerHTML = '';
 
     const dishes = categoryData[name] || [];
@@ -219,19 +288,23 @@
       const card = document.createElement('div');
       card.className = 'dish-card';
 
-     
       card.innerHTML = `
         <img src="${dish.img}" alt="${dish.name}" class="dish-photo" />
         <div class="dish-name">${dish.name}</div>
         <div class="dish-name-english">${dish.english}</div>
         <div class="dish-details">${dish.weightPrice}</div>
       `;
-    
+      // По умолчанию все блюда подсвечены золотым
+      card.classList.add('selected');
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.dish-card').forEach(c => c.classList.remove('active', 'selected'));
+        card.classList.add('active', 'selected');
+      });
       menuDiv.appendChild(card);
     });
   }
 
-  // Показываем первую категорию по умолчанию
+  // При загрузке показываем первую категорию
   window.addEventListener('load', () => {
     showCategory(categoriesNames[0]);
     document.querySelector('.category-btn').classList.add('selected');
