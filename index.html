@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Меню THE JUNGLE</title>
+<title>Меню ресторана</title>
 <style>
   body {
     margin: 0;
@@ -89,9 +89,8 @@
     cursor: pointer;
     transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
   }
-  /* выделение блюда */
-  .dish-card.active,
-  .dish-card.selected {
+  /* выделение блюда — всегда золотое (по умолчанию) */
+  .dish-card {
     border-color: var(--gold);
     box-shadow: 0 0 15px var(--gold);
     background-color: #222;
@@ -138,61 +137,59 @@
 <!-- Меню -->
 <div class="menu" id="menu"></div>
 <script>
-  const categoriesNames = [
-    'СТАРТЕРЫ',
-    'ПОКЕ',
-    'САЛАТЫ',
-    'ТАРТАРЫ',
-    'ГОРЯЧИЕ И ХОЛОДНЫЕ ЗАКУСКИ',
-    'УСТРЫЙНЫЙ БАР',
-    'БЛЮДА НА КОМПАНИЮ',
-    'БРУСКЕТТЫ',
-    'БУРГЕРЫ',
-    'РОЛЛЫ',
-    'СУПЫ',
-    'ПАСТА',
-    'ГАРНИРЫ',
-    'ГОРЯЧИЕ БЛЮДА',
-    'БЛЮДА НА ОГНЕ',
-    'ДЕСЕРТЫ',
-    'ХЛЕБ',
-    'СОУСЫ'
-  ];
+  const categoriesNames = ['Закуски'];
 
   const categoryData = {
-    'СТАРТЕРЫ': [
+    'Закуски': [
       {
-        name: 'Оливки начиненные с сыром Фета',
-        english: 'Olives stuffed with Feta cheese',
-        weightPrice: '160 гр | 730р.',
-        img: 'https://images.unsplash.com/photo-1604085207858-11b76e8bc8c7'
+        name: 'Покé с лососем и авокадо',
+        english: 'Salmon and avocado poke',
+        weightPrice: '360 гр | 1090р.',
+        img: 'https://images.unsplash.com/photo-1603006366543-3b8d7ed4b0d8'
       },
       {
-        name: 'Фирменный ростбиф под соусом вителло тоннато',
-        english: 'Signature roast beef with vitello tonnato sauce',
-        weightPrice: '185 гр | 1090р.',
-        img: 'https://images.unsplash.com/photo-1590080875599-4a29b2a55d8d'
-      },
-      {
-        name: 'Экзотические фрукты',
-        english: 'Exotic fruits',
-        weightPrice: '1500 гр | 2900р.',
+        name: 'Салат с баклажанами в соусе свит-чили',
+        english: 'Eggplant salad with sweet chili sauce',
+        weightPrice: '200 гр | 690р.',
         img: 'https://images.unsplash.com/photo-1574226516831-e1dff420e37e'
       },
       {
-        name: 'Сырное ассорти (Горгондзола, Камамбер, Маасдам, Пармезан, Виноград, Мед)',
-        english: 'Cheese platter (Gorgonzola, Camembert, Maasdam, Parmesan, grapes, honey)',
-        weightPrice: '270 гр | 1490р.',
+        name: 'Тар-тар из говядины',
+        english: 'Beef tartare',
+        weightPrice: '150 гр | 890р.',
+        img: 'https://images.unsplash.com/photo-1606945290626-8b3c8a9f5b4e'
+      },
+      {
+        name: 'Креветки в кляре с соусом васаби',
+        english: 'Battered shrimp with wasabi sauce',
+        weightPrice: '180 гр | 990р.',
+        img: 'https://images.unsplash.com/photo-1586480363394-5a60aefb8d58'
+      },
+      {
+        name: 'Устрица Императорская',
+        english: 'Oyster Imperial',
+        weightPrice: '1 шт | 580р.',
         img: 'https://images.unsplash.com/photo-1603280716474-80d7f0a1b8b7'
+      },
+      {
+        name: 'Дегустационный сет под пенное',
+        english: 'Tasting set to pair with beer',
+        weightPrice: '520 гр / 90 гр | 3980р.',
+        img: 'https://images.unsplash.com/photo-1603280716474-80d7f0a1b8b7'
+      },
+      {
+        name: 'Брускетта с лососем и вялеными томатами',
+        english: 'Bruschetta with salmon and sun-dried tomatoes',
+        weightPrice: '120 гр | 690р.',
+        img: 'https://images.unsplash.com/photo-1609639172774-708e7a7a4b41'
       }
-    ],
-    // остальные категории по вашему желанию
+    ]
   };
 
   const categoriesDiv = document.getElementById('categories');
   const menuDiv = document.getElementById('menu');
 
-  // Создаем кнопки категорий
+  // Создаем кнопку категории
   categoriesNames.forEach(name => {
     const btn = document.createElement('button');
     btn.className = 'category-btn';
@@ -213,7 +210,7 @@
   });
 
   function showCategory(name) {
-    // Очистка меню
+    // Очищаем меню
     menuDiv.innerHTML = '';
 
     const dishes = categoryData[name] || [];
@@ -222,27 +219,21 @@
       const card = document.createElement('div');
       card.className = 'dish-card';
 
+     
       card.innerHTML = `
         <img src="${dish.img}" alt="${dish.name}" class="dish-photo" />
         <div class="dish-name">${dish.name}</div>
         <div class="dish-name-english">${dish.english}</div>
         <div class="dish-details">${dish.weightPrice}</div>
       `;
-      // По умолчанию все блюда подсвечены золотым
-      card.classList.add('selected');
-      card.addEventListener('click', () => {
-        document.querySelectorAll('.dish-card').forEach(c => c.classList.remove('active', 'selected'));
-        card.classList.add('active', 'selected');
-      });
+    
       menuDiv.appendChild(card);
     });
   }
 
-  // При загрузке показываем первую категорию
+  // Показываем первую категорию по умолчанию
   window.addEventListener('load', () => {
-    // выбираем первую категорию
     showCategory(categoriesNames[0]);
-    // делаем кнопку выделенной
     document.querySelector('.category-btn').classList.add('selected');
   });
 </script>
