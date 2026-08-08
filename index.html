@@ -3,20 +3,41 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Меню THE JUNGLE</title>
+<title>Меню ресторана</title>
 <style>
   body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #000;
+    background-color: #222; /* основной фон */
     color: #fff;
+    position: relative;
+    overflow: hidden;
   }
+
+  /* Большой золотой луч из верхнего правого угла */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(
+      ellipse at top right,
+      rgba(212, 175, 55, 0.4),
+      transparent 70%
+    );
+    transform: translate(50%, -50%) rotate(45deg);
+    pointer-events: none;
+    z-index: 0;
+  }
+
   :root {
     --gold: #d4af37;
     --white: #ffffff;
     --black: #000000;
   }
-  /* Кнопка для разворачивания списка */
+
   #categoryButton {
     display: block;
     width: 200px;
@@ -30,11 +51,14 @@
     text-align: center;
     line-height: 40px;
     border-radius: 4px;
+    color: #000;
+    position: relative;
+    z-index: 1;
   }
   #categoryButton:hover {
     background-color: #b38a2a;
   }
-  /* Контейнер для списка категорий */
+
   #categories {
     display: flex;
     flex-wrap: wrap;
@@ -44,12 +68,14 @@
     max-height: 0;
     overflow: hidden;
     transition: opacity 0.5s, max-height 0.5s;
+    position: relative;
+    z-index: 1;
   }
   #categories.show {
     opacity: 1;
     max-height: 2000px;
   }
-  /* Кнопки категорий */
+
   .category-btn {
     padding: 10px 20px;
     margin: 5px;
@@ -66,15 +92,17 @@
     background-color: var(--gold);
     color: #000;
   }
-  /* Меню */
+
   .menu {
     padding: 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     min-height: 300px;
+    position: relative;
+    z-index: 1;
   }
-  /* Карточки блюд */
+
   .dish-card {
     background-color: #111;
     border: 2px solid var(--gold);
@@ -89,14 +117,12 @@
     cursor: pointer;
     transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
   }
-  /* выделение блюда */
   .dish-card.active,
   .dish-card.selected {
     border-color: var(--gold);
     box-shadow: 0 0 15px var(--gold);
     background-color: #222;
   }
-  /* Фото блюда */
   .dish-photo {
     width: 100%;
     height: 150px;
@@ -104,7 +130,6 @@
     border-radius: 4px;
     margin-bottom: 10px;
   }
-  /* Название блюда */
   .dish-name {
     font-family: 'Arial Black', sans-serif;
     color: var(--gold);
@@ -113,7 +138,6 @@
     text-align: center;
     margin-bottom: 8px;
   }
-  /* Английское название */
   .dish-name-english {
     font-family: 'Arial', sans-serif;
     color: var(--white);
@@ -121,7 +145,6 @@
     margin-bottom: 8px;
     text-align: center;
   }
-  /* Граммовка и цена */
   .dish-details {
     font-family: 'Arial', sans-serif;
     color: var(--white);
@@ -294,7 +317,7 @@
         <div class="dish-name-english">${dish.english}</div>
         <div class="dish-details">${dish.weightPrice}</div>
       `;
-      // По умолчанию все блюда подсвечены золотым
+      // Выделяем блюда по умолчанию
       card.classList.add('selected');
       card.addEventListener('click', () => {
         document.querySelectorAll('.dish-card').forEach(c => c.classList.remove('active', 'selected'));
@@ -304,10 +327,11 @@
     });
   }
 
-  // При загрузке показываем первую категорию
+  // При загрузке показывать только список категорий, блюд не отображать
   window.addEventListener('load', () => {
-    showCategory(categoriesNames[0]);
-    document.querySelector('.category-btn').classList.add('selected');
+    // Показываем список категорий
+    document.getElementById('categories').classList.add('show');
+    // Не вызываем showCategory, чтобы блюда не отображались
   });
 </script>
 </body>
