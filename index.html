@@ -8,13 +8,12 @@
   body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: #222; /* основной фон */
+    background-color: #222;
     color: #fff;
     position: relative;
     overflow: hidden;
   }
 
-  /* Большой золотой луч из верхнего правого угла */
   body::before {
     content: "";
     position: fixed;
@@ -52,8 +51,6 @@
     line-height: 40px;
     border-radius: 4px;
     color: #000;
-    position: relative;
-    z-index: 1;
   }
   #categoryButton:hover {
     background-color: #b38a2a;
@@ -99,8 +96,8 @@
     flex-wrap: wrap;
     justify-content: center;
     min-height: 300px;
-    max-height: 80vh; /* ограничение по высоте для удобства */
-    overflow-y: auto; /* добавляем вертикальную прокрутку */
+    max-height: 80vh;
+    overflow-y: auto;
     position: relative;
     z-index: 1;
   }
@@ -156,11 +153,8 @@
 </style>
 </head>
 <body>
-<!-- Кнопка разворота -->
 <button id="categoryButton">▼ РАЗДЕЛЫ МЕНЮ ▼</button>
-<!-- Список категорий -->
 <div id="categories"></div>
-<!-- Меню -->
 <div class="menu" id="menu"></div>
 <script>
   const categoriesNames = [
@@ -216,7 +210,7 @@
         name: 'Поке с лососем и авокадо',
         english: 'Salmon and avocado poke',
         weightPrice: '360 гр | 1090р.',
-        img: 'hhttps://static.tildacdn.com/tild3936-3061-4231-b439-663932653232/photo_2026-07-01_21-.jpg'
+        img: 'https://static.tildacdn.com/tild3936-3061-4231-b439-663932653232/photo_2026-07-01_21-.jpg'
       }
     ],
     'САЛАТЫ': [
@@ -267,23 +261,169 @@
         img: 'https://static.tildacdn.com/tild3263-3039-4830-b165-623336623164/photo_2026-07-01_22-.jpg'
       }
     ],
-    // Остальные категории — пустые
-    'БУРГЕРЫ': [],
-    'РОЛЛЫ': [],
-    'СУПЫ': [],
-    'ПАСТА': [],
-    'ГАРНИРЫ': [],
-    'ГОРЯЧИЕ БЛЮДА': [],
-    'БЛЮДА НА ОГНЕ': [],
-    'ДЕСЕРТЫ': [],
-    'ХЛЕБ': [],
-    'СОУСЫ': []
+    'БУРГЕРЫ': [
+      {
+        name: 'Бургер с говядиной',
+        english: 'Beef burger',
+        weightPrice: '295 гр | 890р.',
+        img: 'https://static.tildacdn.com/tild6161-3135-4763-a438-626438326333/photo_2026-07-01_23-.jpg'
+      },
+      {
+        name: 'Шримп бургер',
+        english: 'Shrimp burger',
+        weightPrice: '280 гр | 990р.',
+        img: 'https://static.tildacdn.com/tild3533-6536-4533-b038-623462386435/photo_2026-07-01_23-.jpg'
+      }
+    ],
+    'РОЛЛЫ': [
+      {
+        name: 'Филадельфия с авокадо',
+        english: 'Philadelphia roll with avocado',
+        weightPrice: '320 гр | 1090р.',
+        img: 'https://static.tildacdn.com/tild3333-3163-4465-a165-656535666431/photo_2026-07-01_21-.jpg'
+      },
+      {
+        name: 'Филадельфия с клубникой и манго',
+        english: 'Philadelphia roll with strawberry and mango',
+        weightPrice: '360 гр | 1290р.',
+        img: 'https://static.tildacdn.com/tild3034-3639-4937-a433-623138313663/photo_2026-07-01_21-.jpg'
+      }
+    ],
+    'СУПЫ': [
+      {
+        name: 'Уха из филе трески и семги',
+        english: 'Cod and Salmon Fish Soup',
+        weightPrice: '350 гр | 1390р.',
+        img: 'https://static.tildacdn.com/tild6663-6466-4464-b930-363839393633/photo_2026-07-01_19-.jpg'
+      },
+      {
+        name: 'Борщ с конским салом',
+        english: 'Borscht with horse fat',
+        weightPrice: '350 гр | 1190р.',
+        img: 'https://static.tildacdn.com/tild6137-6265-4534-b739-363434316430/photo_2026-07-01_21-.jpg'
+      }
+    ],
+    'ПАСТА': [
+      {
+        name: 'С томленой говядиной в сливочно-перечном соусе',
+        english: 'With stewed beef in creamy pepper sauce',
+        weightPrice: '390 гр | 970р.',
+        img: 'https://static.tildacdn.com/tild6234-3763-4431-a463-626263636161/image.png'
+      },
+      {
+        name: 'Карбонара',
+        english: 'Carbonara',
+        weightPrice: '250 гр | 790р.',
+        img: 'https://static.tildacdn.com/tild3536-3162-4530-b039-633237393136/photo_2026-07-01_23-.jpg'
+      }
+    ],
+    'ГАРНИРЫ': [
+      {
+        name: 'Картофель фри',
+        english: 'French fries',
+        weightPrice: '110 гр | 340р.',
+        img: 'https://static.tildacdn.com/tild3039-6363-4563-a238-393734663837/__1.jpg'
+      },
+      {
+        name: 'Картошка по деревенскии',
+        english: 'Rustic-style potatoes',
+        weightPrice: '110 гр | 390р.',
+        img: 'https://static.tildacdn.com/tild3037-3863-4864-b162-663166663130/___1.jpg'
+      }
+    ],
+    'ГОРЯЧИЕ БЛЮДА': [
+      {
+        name: 'Миньон из конины',
+        english: 'Horsemeat mignon',
+        weightPrice: '200/30 гр | 1490р.',
+        img: 'https://static.tildacdn.com/tild3233-6566-4338-a162-623134326432/photo_2026-07-01_23-.jpg'
+      },
+      {
+        name: 'Филе миньон с бэби картофелем',
+        english: 'Filet mignon with baby potatoes',
+        weightPrice: '190/120 гр | 1890р.',
+        img: 'https://static.tildacdn.com/tild6665-3539-4032-b532-303164393961/photo_2026-07-02_00-.jpg'
+      }
+    ],
+    'БЛЮДА НА ОГНЕ': [
+      {
+        name: 'Рибай',
+        english: 'Ribeye',
+        weightPrice: '200/40 гр | 1990р.',
+        img: 'https://static.tildacdn.com/tild3866-3165-4134-a533-376162393635/photo_2026-07-03_13-.jpg'
+      },
+      {
+        name: 'Креветки тигровые',
+        english: 'Tiger shrimp',
+        weightPrice: 'за 100 гр | 620р.',
+        img: 'https://static.tildacdn.com/tild6339-3035-4732-b762-666531393932/photo_2026-07-01_19-.jpg'
+      },
+      {
+        name: 'Креветки аргентинские',
+        english: 'Argentine shrimp',
+        weightPrice: 'за 100 гр | 620р.',
+        img: 'https://static.tildacdn.com/tild3734-3962-4334-b362-316231626230/photo_2026-07-01_19-.jpg'
+      }
+    ],
+    'ДЕСЕРТЫ': [
+      {
+        name: 'Дубайский шоколад',
+        english: 'Dubai chocolate',
+        weightPrice: '140 гр | 790р.',
+        img: 'https://static.tildacdn.com/tild3262-6564-4162-b737-363065333963/WhatsApp_Image_2025-.jpeg'
+      },
+      {
+        name: 'Медовик',
+        english: 'Honey cake',
+        weightPrice: '130 гр | 790р.',
+        img: 'https://static.tildacdn.com/tild3665-6535-4835-b738-326632383039/WhatsApp_Image_2025-.jpeg'
+      },
+      {
+        name: 'Рикотта с грушей и страчателлой',
+        english: 'Ricotta with pear and stracciatella',
+        weightPrice: '150 гр | 790р.',
+        img: 'https://static.tildacdn.com/tild6139-3137-4536-b732-376166386361/WhatsApp_Image_2025-.jpeg'
+      },
+      {
+        name: 'Жгучий тирамису',
+        english: 'Hot tiramisu',
+        weightPrice: '130 гр | 790р.',
+        img: 'https://static.tildacdn.com/tild3439-6137-4332-a139-663537643234/WhatsApp_Image_2025-.jpeg'
+      }
+    ],
+    'ХЛЕБ': [
+      {
+        name: 'Хлеб из нашей пекарни',
+        english: 'Bread from our bakery',
+        weightPrice: '330 гр | 300р.',
+        img: 'https://static.tildacdn.com/tild3331-6566-4063-b234-383039386566/WhatsApp_Image_2025-.jpeg'
+      }
+    ],
+    'СОУСЫ': [
+      {
+        name: 'Барбекью',
+        english: 'Barbecue',
+        weightPrice: '40 гр | 160р.',
+        img: ''
+      },
+      {
+        name: 'Сырный',
+        english: 'Cheesy',
+        weightPrice: '40 гр | 160р.',
+        img: ''
+      },
+      {
+        name: 'Сладкий Чили',
+        english: 'Sweet Chili',
+        weightPrice: '40 гр | 160р.',
+        img: ''
+      }
+    ]
   };
 
   const categoriesDiv = document.getElementById('categories');
   const menuDiv = document.getElementById('menu');
 
-  // Создаем кнопки категорий
   categoriesNames.forEach(name => {
     const btn = document.createElement('button');
     btn.className = 'category-btn';
@@ -298,13 +438,11 @@
     categoriesDiv.appendChild(btn);
   });
 
-  // Обработчик для кнопки раскрытия
   document.getElementById('categoryButton').addEventListener('click', () => {
     categoriesDiv.classList.toggle('show');
   });
 
   function showCategory(name) {
-    // Очистка меню
     menuDiv.innerHTML = '';
 
     const dishes = categoryData[name] || [];
@@ -314,12 +452,11 @@
       card.className = 'dish-card';
 
       card.innerHTML = `
-        <img src="${dish.img}" alt="${dish.name}" class="dish-photo" />
+        ${dish.img ? `<img src="${dish.img}" alt="${dish.name}" class="dish-photo" />` : ''}
         <div class="dish-name">${dish.name}</div>
         <div class="dish-name-english">${dish.english}</div>
         <div class="dish-details">${dish.weightPrice}</div>
       `;
-      // Выделяем блюда по умолчанию
       card.classList.add('selected');
       card.addEventListener('click', () => {
         document.querySelectorAll('.dish-card').forEach(c => c.classList.remove('active', 'selected'));
@@ -329,11 +466,8 @@
     });
   }
 
-  // При загрузке показывать только список категорий, блюд не отображать
   window.addEventListener('load', () => {
-    // Показываем список категорий
     document.getElementById('categories').classList.add('show');
-    // Не вызываем showCategory, чтобы блюда не отображались
   });
 </script>
 </body>
